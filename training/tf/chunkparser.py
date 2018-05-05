@@ -137,10 +137,12 @@ class ChunkParser:
         probs = tf.decode_raw(probs, tf.float32)
         winner = tf.decode_raw(winner, tf.float32)
 
-        planes = tf.to_float(planes)
+        planes = tf.to_bfloat16(planes)
         planes = tf.reshape(planes, (ChunkParser.BATCH_SIZE, 112, 8*8))
 
+        probs = tf.to_bfloat16(probs)
         probs = tf.reshape(probs, (ChunkParser.BATCH_SIZE, 1858))
+        winner = tf.to_bfloat16(winner)
         winner = tf.reshape(winner, (ChunkParser.BATCH_SIZE, 1))
 
         return (planes, probs, winner)
@@ -369,10 +371,12 @@ class ChunkParserTest(unittest.TestCase):
 
         planes = np.frombuffer(data[0], dtype=np.uint8, count=112*8*8*batch_size)
         planes = planes.reshape(batch_size, 112, 8*8)
-        planes = planes.astype(np.float32)
+        planes = planes.astype(np.float16)
         probs = np.frombuffer(data[1], dtype=np.float32, count=1858*batch_size)
         probs = probs.reshape(batch_size, 1858)
+        probs = probs.astype(np.float16)
         winner = np.frombuffer(data[2], dtype=np.float32, count=1*batch_size)
+        winner = winner.astype(np.float16)
 
         # Pass it through tensorflow
         with tf.Session() as sess:
