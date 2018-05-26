@@ -2101,6 +2101,7 @@ class TrainingStep:
         assert self.version == int.from_bytes(ver, byteorder="little")
         # Enforce move_count to 0
         move_count = 0
+        self.us_black = us_black
         # Unpack planes.
         for hist in range(self.NUM_HIST):
             for idx, piece in enumerate(PIECES):
@@ -2114,7 +2115,6 @@ class TrainingStep:
         self.us_oo = us_oo
         self.them_ooo = them_ooo
         self.them_oo = them_oo
-        self.us_black = us_black
         self.rule50_count = rule50_count
         self.winner = winner
         for idx in range(0, len(probs), 4):
